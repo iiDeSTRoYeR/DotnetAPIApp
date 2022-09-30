@@ -4,14 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]        // Client specifies path as api/UsersController
-    public class UsersController : ControllerBase
+    public class UsersController : BaseApiController
     {
         private readonly DataContext _context;
 
@@ -20,6 +19,7 @@ namespace API.Controllers
             _context = context;
         }
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers() 
         // public  ActionResult<IEnumerable<AppUser>> GetUsers()          //sync vs async   //IEnumerable is used because it is too simple, lists can be sorted, maniputlated, etc...
         {
@@ -30,6 +30,7 @@ namespace API.Controllers
         }
 
 
+        [Authorize]
         //e.g.,  api/users/3
         [HttpGet("{id}")]
         public async Task<ActionResult<AppUser>> GetUser(int id)          
